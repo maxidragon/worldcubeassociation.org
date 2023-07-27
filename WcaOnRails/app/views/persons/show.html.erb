@@ -19,6 +19,9 @@
         <li><a href="#championship-podiums" data-toggle="tab"><%= t '.championship_podiums' %></a></li>
       <% end %>
       <li><a href="#map" data-toggle="tab"><%= t '.competitions_map' %></a></li>
+      <% if @memberships.length > 0 %>
+        <li><a href="#memberships" data-toggle="tab"><%= t '.memberships' %></a></li>
+      <% end %>
     </ul>
 
     <div class="tab-content">
@@ -33,6 +36,11 @@
       <% if @championship_podiums.values.flatten.any? %>
         <div class="tab-pane" id="championship-podiums">
           <%= render "championship_podiums" %>
+        </div>
+      <% end %>
+      <% if @memberships %>
+        <div class="tab-pane" id="memberships">
+          <%= render "memberships" %>
         </div>
       <% end %>
       <div class="tab-pane" id="map">

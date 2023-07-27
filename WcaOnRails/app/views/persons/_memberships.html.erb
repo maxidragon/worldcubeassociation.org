@@ -1,0 +1,50 @@
+<div class="memberships">
+  <h3 class="text-center"><%= t '.persons.show.active_roles' %></h3>
+  <div class="table-responsive">
+    <table class="table table-striped">
+      <thead>
+        <tr>
+          <th class="team"><%= t '.persons.show.team_name' %></th>
+          <th class="role"><%= t '.persons.show.role' %></th>
+          <th class="start_date"><%= t '.persons.show.since' %></th>
+          <th></th>
+        </tr>
+      </thead>
+      <tbody>
+        <% active_memberships = @memberships.select { |team_member| team_member.end_date.nil? } %>
+        <% active_memberships.each do |team_member| %>
+          <tr>
+            <td><%= team_member.team.name %></td>
+            <td><%= team_member.team_senior_member ? "Senior member" : team_member.team_leader ? "Team leader" : "Member"%></td>
+            <td><%= team_member.start_date %></td>
+            <td></td>
+          </tr>
+        <% end %>
+      </tbody>
+    </table>
+    <% if active_memberships.any? && @memberships.length > active_memberships.length %>
+        <h3 class="text-center"><%= t '.persons.show.past_roles' %></h3>
+    <% end %>
+    <table class="table table-striped">
+      <thead>
+        <tr>
+          <th class="team"><%= t '.persons.show.team_name' %></th>
+          <th class="role"><%= t '.persons.show.role' %></th>
+          <th class="start_date"><%= t '.persons.show.start_date' %></th>
+          <th class="end_date"><%= t '.persons.show.end_date' %></th>
+        </tr>
+      </thead>
+      <tbody>
+        <% past_memberships = @memberships.reject { |team_member| team_member.end_date.nil? } %>
+        <% past_memberships.each do |team_member| %>
+          <tr>
+            <td><%= team_member.team.name %></td>
+           <td><%= team_member.team_senior_member ? t('.structure.senior_member') : (team_member.team_leader ? t('.structure.leader') : t('.persons.show.team_member')) %></td>
+            <td><%= team_member.start_date %></td>
+            <td><%= team_member.end_date %></td>
+          </tr>
+        <% end %>
+      </tbody>
+    </table>
+  </div>
+</div>
