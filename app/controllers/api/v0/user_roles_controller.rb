@@ -222,6 +222,7 @@ class Api::V0::UserRolesController < Api::V0::ApiController
         new_role.metadata = new_role_metadata
         new_role.save!
       end
+      role = new_role
     elsif group_type == UserGroup.group_types[:delegate_probation]
       return render status: :unprocessable_content, json: { error: "Invalid parameter to be changed" } unless params.key?(:endDate)
 

@@ -118,7 +118,7 @@ class UserRole < ApplicationRecord
   def staff?
     case group_type
     when UserGroup.group_types[:delegate_regions]
-      %w[senior_delegate regional_delegate delegate junior_delegate].include?(metadata.status)
+      RolesMetadataDelegateRegions::STAFF_STATUSES.include?(metadata.status)
     when UserGroup.group_types[:board], UserGroup.group_types[:officers], UserGroup.group_types[:teams_committees]
       true
     else

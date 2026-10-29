@@ -1,5 +1,8 @@
 <p>The role has been changed for <%= @role.user.name %> in <%= @group_type_name %> on <%= @today_date %>.</p>
 <p>The change has been executed by <%= @user_who_made_the_change.name %>.</p>
+<% if @first_junior_delegate_in_region %>
+  <p><strong>Note:</strong> <%= @role.user.name %> is the first Junior Delegate in <%= @role.group.name %>.</p>
+<% end %>
 <% if @role.group_type == UserGroup.group_types[:delegate_regions] && @role.user.delegate_in_probation? %>
   <p><strong>Warning:</strong> <%= @role.user.name %> is currently on probation. Please check the <%= link_to "Delegates on Probation spreadsheet", "https://docs.google.com/spreadsheets/d/1ZU1lk0niGn-vjmbiDkoROU8qjmdHkNebZ2GCFHm6vvA/edit#gid=1887522006" %> for more details.</p>
 <% end %>

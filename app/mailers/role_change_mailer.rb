@@ -28,11 +28,24 @@ class RoleChangeMailer < ApplicationMailer
     metadata.compact
   end
 
+  private def role_title(role)
+    status = role.metadata.try(:status)
+    return role.group.name if status.blank?
+
+    "#{role.group.name} (#{I18n.t("enums.user_roles.status.#{role.group_type}.#{status}", locale: 'en')})"
+  end
+
+  # Other active roles that still make the user a WCA volunteer once the given role is gone.
+  private def remaining_staff_roles(role)
+    role.user.active_roles.includes(:group, :metadata).where.not(id: role.id).filter(&:staff?)
+  end
+
   def notify_role_start(role, user_who_made_the_change)
     @role = role
     @user_who_made_the_change = user_who_made_the_change
     @group_type_name = UserGroup.group_type_name[@role.group.group_type.to_sym]
     @metadata = role_metadata(role)
+    @first_junior_delegate_in_region = role.metadata.try(:first_junior_delegate_in_region?)
     @to_list = [wrt_email_recipient]
 
     # Populate the recepient list.
@@ -158,6 +171,7 @@ class RoleChangeMailer < ApplicationMailer
     @changes = JSON.parse changes
     @group_type_name = UserGroup.group_type_name[role.group_type.to_sym]
     @metadata = role_metadata(role)
+    @first_junior_delegate_in_region = @changes.any? { |change| change['changed_parameter'] == 'Status' } && role.metadata.try(:first_junior_delegate_in_region?)
     @today_date = Date.today
     @to_list = [wrt_email_recipient]
 
@@ -247,6 +261,7 @@ class RoleChangeMailer < ApplicationMailer
     @user_who_made_the_change = user_who_made_the_change
     @group_type_name = UserGroup.group_type_name[role.group_type.to_sym]
     @metadata = role_metadata(role)
+    @remaining_staff_role_titles = remaining_staff_roles(role).map { |remaining_role| role_title(remaining_role) }
     @to_list = [wrt_email_recipient]
 
     # Populate the recepient list.
